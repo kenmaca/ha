@@ -28,9 +28,8 @@ trigger:
     to: on
 
 action:
-- service: homeassistant.turn_{{ trigger.to_state.state }}
-  target:
-    entity_id: !input primary_switch
-- service: homeassistant.turn_{{ trigger.to_state.state }}
-  target:
-    entity_id: !input secondary_switch
+  - service: homeassistant.turn_{{ trigger.to_state.state }}
+    target:
+      entity_id:
+        - !input primary_switch
+        - !input secondary_switch
