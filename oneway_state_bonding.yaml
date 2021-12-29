@@ -18,6 +18,8 @@ blueprint:
         entity:
           domain: switch
       
+mode: single
+
 trigger:
   - platform: state
     entity_id: !input primary_switch
