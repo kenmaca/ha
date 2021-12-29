@@ -10,13 +10,13 @@ blueprint:
       name: Primary Switch (on/off triggers)
       selector:
         entity:
-          #domain: switch
+          domain: switch
           
     secondary_switch:
       name: Secondary Switch (off trigger only)
       selector:
         entity:
-          #domain: switch
+          domain: switch
       
 trigger:
   - entity_id: !input primary_switch
