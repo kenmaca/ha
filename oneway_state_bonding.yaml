@@ -19,14 +19,15 @@ blueprint:
           domain: switch
       
 trigger:
-  - entity_id: !input primary_switch
-    platform: state
-  - entity_id: !input secondary_switch
-    platform: state
+  - platform: state
+    entity_id: !input primary_switch
+  - platform: state
+    entity_id: !input secondary_switch
     to: on
 
 action:
-- entity_id:
-  - !input primary_switch
-  - !input secondary_switch
-  service: "homeassistant.turn_{{ trigger.to_state.state }}"
+- service: "homeassistant.turn_{{ trigger.to_state.state }}"
+  target:
+    entity_id:
+      - !input primary_switch
+      - !input secondary_switch
