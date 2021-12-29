@@ -1,0 +1,32 @@
+#
+# Turns on both devices or off iff the primary device triggered it
+
+blueprint:
+  name: One-way State Bonding
+  description: Turns on both devices or off iff the primary device triggered it
+  domain: automation
+  input:
+    primary_switch:
+      name: Primary Switch (on/off triggers)
+      selector:
+        entity:
+          #domain: switch
+          
+    secondary_switch:
+      name: Secondary Switch (off trigger only)
+      selector:
+        entity:
+          #domain: switch
+      
+trigger:
+  - entity_id: !input primary_switch
+    platform: state
+  - entity_id: !input secondary_switch
+    platform: state
+    to: on
+
+action:
+- entity_id:
+  - !input primary_switch
+  - !input secondary_switch
+  service: "homeassistant.turn_{{ trigger.to_state.state }}"
