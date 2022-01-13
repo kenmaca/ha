@@ -23,7 +23,7 @@ mode: single
 trigger:
   - platform: state
     entity_id: !input primary
-    to: off
+    to: 'off'
 
 condition: []
 
