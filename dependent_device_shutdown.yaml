@@ -1,0 +1,33 @@
+#
+# Turns off a secondary device when the primary device is turned off
+
+blueprint:
+  name: Dependent device shutdown
+  description: Turns off a secondary device when the primary device is turned off
+  domain: automation
+  input:
+    primary:
+      name: Primary Device
+      selector:
+        entity:
+          #domain: switch
+          
+    secondary:
+      name: Secondary Device
+      selector:
+        entity:
+          #domain: switch
+      
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input primary
+    to: off
+
+condition: []
+
+action:
+  - service: homeassistant.turn_off
+    target:
+      entity_id: !input secondary_switch
