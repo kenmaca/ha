@@ -31,7 +31,7 @@ condition: []
 
 action:
   - service: 'homeassistant.turn_{{ trigger.to_state.state }}'
-    target:
+    data_template:
       entity_id:
         - !input primary_switch
         - !input secondary_switch
