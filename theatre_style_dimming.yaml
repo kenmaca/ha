@@ -72,7 +72,6 @@ action:
               entity_id: !input room_light
     default:
       - service: scene.turn_on
-        target:
+        data_template:
           entity_id: 'scene.{{ scene_id }}'
-        data:
           transition: 3
