@@ -30,4 +30,4 @@ condition: []
 action:
   - service: homeassistant.turn_off
     target:
-      entity_id: !input secondary_switch
+      entity_id: !input secondary
