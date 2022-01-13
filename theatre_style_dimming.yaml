@@ -2,7 +2,7 @@
 # Dims lights when media is played and reverts back to previous brightness when stopped/paused
 
 blueprint:
-  name: Theatre Dimming
+  name: Theatre-style Dimming
   description: Dims lights when media is played and reverts back to previous brightness when stopped/paused
   domain: automation
   input:
