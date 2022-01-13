@@ -53,7 +53,7 @@ action:
           - service: scene.create
             data:
               scene_id: !input scene_id
-              snapshot_entities: !input media_player
+              snapshot_entities: !input room_light
           - service: light.turn_on
             data:
               brightness_pct: 10
