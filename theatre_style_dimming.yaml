@@ -20,6 +20,7 @@ blueprint:
 
     dimmed_brightness:
       name: Dimmed Brightness
+      default: 10
       selector:
         number:
           min: 0
