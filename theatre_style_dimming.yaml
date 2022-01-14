@@ -73,5 +73,5 @@ action:
     default:
       - service: scene.turn_on
         data_template:
-          target: 'scene.{{ scene_id }}'
+          entity_id: 'scene.{{ scene_id }}'
           transition: 3
