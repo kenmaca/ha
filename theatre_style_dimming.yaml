@@ -54,7 +54,7 @@ blueprint:
     scene_id:
       name: Scene ID
 
-mode: single
+mode: restart
 
 variables:
   scene_id: !input scene_id
@@ -62,10 +62,7 @@ variables:
 trigger:
   - platform: state
     entity_id: !input media_player
-    for:
-      hours: 0
-      minutes: 0
-      seconds: !input ttd
+    to: playing
 
 condition:
   - condition: state
@@ -73,28 +70,24 @@ condition:
     state: 'on'
 
 action:
-  - choose:
-      - conditions:
-          - condition: state
-            entity_id: !input media_player
-            state: playing
-            for:
-              hours: 0
-              minutes: 0
-              seconds: 0
-        sequence:
-          - service: scene.create
-            data:
-              scene_id: !input scene_id
-              snapshot_entities: !input room_light
-          - service: light.turn_on
-            data:
-              brightness_pct: !input dimmed_brightness
-              transition: !input dim_duration
-            target:
-              entity_id: !input room_light
-    default:
-      - service: scene.turn_on
-        data_template:
-          entity_id: 'scene.{{ scene_id }}'
-          transition: !input dim_duration
+  - service: scene.create
+    data:
+      scene_id: !input scene_id
+      snapshot_entities: !input room_light
+  - service: light.turn_on
+    data:
+      brightness_pct: !input dimmed_brightness
+      transition: !input dim_duration
+    target:
+      entity_id: !input room_light
+  - wait_for_trigger:
+    - platform: state
+      entity_id: !input media_player
+      for:
+        hours: 0
+        minutes: 0
+        seconds: !input ttd
+  - service: scene.turn_on
+    data_template:
+      entity_id: 'scene.{{ scene_id }}'
+      transition: !input dim_duration
