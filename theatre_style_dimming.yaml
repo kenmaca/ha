@@ -29,6 +29,28 @@ blueprint:
           unit_of_measurement: '%'
           mode: slider
 
+    ttd:
+      name: Time-to-dim
+      default: 10
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 1
+          unit_of_measurement: 'seconds'
+          mode: slider
+
+    dim_duration:
+      name: Dim Duration
+      default: 3
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 1
+          unit_of_measurement: 'seconds'
+          mode: slider
+
     scene_id:
       name: Scene ID
 
@@ -43,7 +65,7 @@ trigger:
     for:
       hours: 0
       minutes: 0
-      seconds: 5
+      seconds: !input ttd
 
 condition:
   - condition: state
@@ -68,11 +90,11 @@ action:
           - service: light.turn_on
             data:
               brightness_pct: !input dimmed_brightness
-              transition: 3
+              transition: !input dim_duration
             target:
               entity_id: !input room_light
     default:
       - service: scene.turn_on
         data_template:
           entity_id: 'scene.{{ scene_id }}'
-          transition: 3
+          transition: !input dim_duration
