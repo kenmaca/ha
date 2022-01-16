@@ -31,6 +31,17 @@ blueprint:
 
     ttd:
       name: Time-to-dim
+      default: 2
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 1
+          unit_of_measurement: 'seconds'
+          mode: slider
+
+    ttr:
+      name: Time-to-reset
       default: 10
       selector:
         number:
@@ -60,6 +71,8 @@ trigger:
   - platform: state
     entity_id: !input media_player
     to: playing
+    for:
+      seconds: !input ttd
 
 condition:
   - condition: numeric_state
@@ -86,10 +99,15 @@ action:
   - wait_for_trigger:
     - platform: state
       entity_id: !input media_player
+      to: 'paused'
       for:
-        hours: 0
-        minutes: 0
-        seconds: !input ttd
+        seconds: !input ttr
+    - platform: state
+      entity_id: !input media_player
+      to: 'idle'
+    - platform: state
+      entity_id: !input media_player
+      to: 'off'
   - service: scene.turn_on
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
