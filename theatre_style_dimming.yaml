@@ -65,8 +65,8 @@ condition:
   - condition: numeric_state
     entity_id: !input room_light
     value_template: >
-      {% if (states.{{ room_light }}).state == 'on' %}
-        {{ (states.{{ room_light }}).attributes.brightness }}
+      {% if is_state(room_light, 'on') %}
+        {{ (states(room_light)).attributes.brightness }}
       {% else %}
         0
       {% endif %}
