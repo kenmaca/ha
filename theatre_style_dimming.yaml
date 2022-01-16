@@ -55,7 +55,7 @@ mode: single
 
 variables:
   room_light: !input room_light
-  scene_id: persistence_{{ room_light.split('.')[1] }}
+  scene_id: 'persistence_{{ room_light.split('.')[1] }}'
 
 trigger:
   - platform: state
@@ -74,7 +74,7 @@ condition:
 action:
   - service: scene.create
     data_template:
-      scene_id: {{ scene_id }}
+      scene_id: '{{ scene_id }}'
       snapshot_entities: !input room_light
   - service: light.turn_on
     data:
@@ -91,5 +91,5 @@ action:
         seconds: !input ttd
   - service: scene.turn_on
     data_template:
-      entity_id: scene.{{ scene_id }}
+      entity_id: 'scene.{{ scene_id }}'
       transition: !input dim_duration
