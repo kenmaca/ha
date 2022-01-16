@@ -38,7 +38,7 @@ trigger:
       seconds: !input ttl
 
 condition:
-  - platform: state
+  - condition: state
     entity_id: !input door
     state: 'off'
 
