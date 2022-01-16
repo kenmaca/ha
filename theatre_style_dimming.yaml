@@ -66,7 +66,7 @@ condition:
     entity_id: !input room_light
     value_template: >
       {% if is_state(room_light, 'on') %}
-        {{ (states(room_light)).attributes.brightness }}
+        {{ states[room_light].attributes.brightness }}
       {% else %}
         0
       {% endif %}
