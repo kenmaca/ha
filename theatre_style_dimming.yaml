@@ -100,17 +100,21 @@ action:
     - platform: state
       entity_id: !input media_player
       to: 'paused'
+    - platform: state
+      entity_id: !input media_player
+      to: 'idle'
       for:
         seconds: !input ttr
     - platform: state
       entity_id: !input media_player
-      to: 'idle'
-    - platform: state
-      entity_id: !input media_player
       to: 'off'
+      for:
+        seconds: !input ttr
     - platform: state
       entity_id: !input media_player
       to: 'unavailable'
+      for:
+        seconds: !input ttr
   - service: scene.turn_on
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
