@@ -65,7 +65,10 @@ trigger:
 condition:
   - condition: numeric_state
     entity_id: !input room_light
-    value_template: '{% if states.{{ room_light }}.state == 'on' %}{{ states.{{ room_light }}.attributes.brightness }}{% else %}0{% endif %}'
+    value_template: >
+      {% (if states.{{ room_light }}).state == 'on' %}
+        {{ (states.{{ room_light }}).attributes.brightness }}
+      {% else %} 0 {% endif %}
     above: !input dimmed_brightness
 
 action:
