@@ -83,7 +83,7 @@ condition:
       {% else %}
         0
       {% endif %}
-    above: !input dimmed_brightness
+    above: 50
 
 action:
   - service: scene.create
