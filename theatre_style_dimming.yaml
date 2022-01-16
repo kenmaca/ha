@@ -54,10 +54,11 @@ blueprint:
     scene_id:
       name: Scene ID
 
-mode: restart
+mode: single
 
 variables:
   scene_id: !input scene_id
+  room_light: !input room_light
 
 trigger:
   - platform: state
@@ -65,9 +66,10 @@ trigger:
     to: playing
 
 condition:
-  - condition: state
+  - condition: numeric_state
     entity_id: !input room_light
-    state: 'on'
+    value_template: '{% if states.{{ room_light }}.state == 'on' %}{{ states.{{ room_light }}.attributes.brightness }}{% else %}0{% endif %}'
+    above: !input dimmed_brightness
 
 action:
   - service: scene.create
