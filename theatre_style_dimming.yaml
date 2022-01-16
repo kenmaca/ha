@@ -51,14 +51,11 @@ blueprint:
           unit_of_measurement: 'seconds'
           mode: slider
 
-    scene_id:
-      name: Scene ID
-
 mode: single
 
 variables:
-  scene_id: !input scene_id
   room_light: !input room_light
+  scene_id: persistence_{{ room_light.split('.')[1] }}
 
 trigger:
   - platform: state
@@ -73,8 +70,8 @@ condition:
 
 action:
   - service: scene.create
-    data:
-      scene_id: !input scene_id
+    data_template:
+      scene_id: {{ scene_id }}
       snapshot_entities: !input room_light
   - service: light.turn_on
     data:
@@ -91,5 +88,5 @@ action:
         seconds: !input ttd
   - service: scene.turn_on
     data_template:
-      entity_id: 'scene.{{ scene_id }}'
+      entity_id: scene.{{ scene_id }}
       transition: !input dim_duration
