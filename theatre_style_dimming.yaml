@@ -108,6 +108,9 @@ action:
     - platform: state
       entity_id: !input media_player
       to: 'off'
+    - platform: state
+      entity_id: !input media_player
+      to: 'unavailable'
   - service: scene.turn_on
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
