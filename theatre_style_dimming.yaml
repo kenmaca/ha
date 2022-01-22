@@ -31,7 +31,7 @@ blueprint:
 
     ttd:
       name: Time-to-dim
-      default: 2
+      default: 3
       selector:
         number:
           min: 0
@@ -53,7 +53,7 @@ blueprint:
 
     dim_duration:
       name: Dim Duration
-      default: 3
+      default: 2
       selector:
         number:
           min: 0
