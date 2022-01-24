@@ -115,6 +115,9 @@ action:
       to: 'unavailable'
       for:
         seconds: !input ttr
+    - platform: state
+      entity_id: !input room_light
+      to: 'off'
   - service: scene.turn_on
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
