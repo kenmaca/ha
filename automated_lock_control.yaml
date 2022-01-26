@@ -33,13 +33,18 @@ mode: single
 
 trigger:
   - platform: state
+    entity_id: !input lock
+    to: 'locked'
+  - platform: state
     entity_id: !input door
     to: 'off'
     for:
       seconds: !input ttl
   - platform: state
     entity_id: !input lock
-    to: 'locked'
+    to: 'unlocked'
+    for:
+      seconds: !input ttl
 
 action:
   - choose:
