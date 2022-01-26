@@ -96,6 +96,8 @@ action:
       transition: !input dim_duration
     target:
       entity_id: !input room_light
+  - delay:
+      seconds: !input dim_duration
   - wait_for_trigger:
     - platform: state
       entity_id: !input media_player
@@ -122,3 +124,5 @@ action:
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
       transition: !input dim_duration
+  - delay:
+      seconds: !input dim_duration
