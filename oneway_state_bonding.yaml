@@ -23,9 +23,15 @@ mode: single
 trigger:
   - platform: state
     entity_id: !input primary_switch
+  - platform: state
+    entity_id: !input secondary_switch
+    to: 'off'
+
+condition: []
 
 action:
   - service: 'homeassistant.turn_{{ trigger.to_state.state }}'
     data_template:
       entity_id:
+        - !input primary_switch
         - !input secondary_switch
