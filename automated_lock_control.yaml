@@ -31,20 +31,15 @@ blueprint:
 
 mode: single
 
-variables:
-  door: !input door
-  lock: !input lock
-  ttl: !input ttl
-
 trigger:
   - platform: state
     entity_id: !input door
-    state: 'off'
+    to: 'off'
     for:
       seconds: !input ttl
   - platform: state
     entity_id: !input lock
-    state: 'locked'
+    to: 'locked'
 
 action:
   - choose:
