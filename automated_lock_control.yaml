@@ -29,7 +29,7 @@ blueprint:
           unit_of_measurement: 'seconds'
           mode: slider
 
-mode: restart
+mode: single
 
 variables:
   door: !input door
@@ -39,14 +39,28 @@ variables:
 trigger:
   - platform: state
     entity_id: !input door
-
-condition:
-  - condition: template
-    value_template: '{{ is_state(trigger.entity_id, 'on') or (trigger.for >= ttl) }}'
-  - condition: template
-    value_template: '{{ (is_state(trigger.entity_id, 'on') and is_state(lock, 'locked')) or (is_state(trigger.entity_id, 'off') and is_state(lock, 'unlocked')) }}'
+    state: 'off'
+    for:
+      seconds: !input ttl
+  - platform: state
+    entity_id: !input lock
+    state: 'locked'
 
 action:
-  - service_template: lock.{{ 'lock' if is_state(trigger.entity_id, 'off') else 'unlock' }}
-    entity_id: !input lock
-
+  - choose:
+    - alias: 'Unlock when door locked and open to prevent getting stuck'
+      conditions:
+        - condition: state
+          entity_id: !input door
+          state: 'on'
+      sequence:
+        - service: lock.unlock
+          entity_id: !input lock
+    - alias: 'Automatically lock on door closed for ttl'
+      conditions:
+        - condition: state
+          entity_id: !input lock
+          state: 'unlocked'
+      sequence:
+        - service: lock.lock
+          entity_id: !input lock
