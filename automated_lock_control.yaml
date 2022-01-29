@@ -29,7 +29,7 @@ blueprint:
           unit_of_measurement: 'seconds'
           mode: slider
 
-mode: single
+mode: restart
 
 trigger:
   - platform: state
