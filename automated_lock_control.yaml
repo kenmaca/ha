@@ -29,12 +29,25 @@ blueprint:
           unit_of_measurement: 'seconds'
           mode: slider
 
+    ttu:
+      name: Time-to-unlock
+      default: 1
+      selector:
+        number:
+          min: 0
+          max: 300
+          step: 1
+          unit_of_measurement: 'seconds'
+          mode: slider
+
 mode: single
 
 trigger:
   - platform: state
     entity_id: !input lock
     to: 'locked'
+    for:
+      seconds: !input ttu
   - platform: state
     entity_id: !input door
     to: 'off'
