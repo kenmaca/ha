@@ -28,15 +28,26 @@ blueprint:
           step: 1
           unit_of_measurement: 'seconds'
           mode: slider
+    
+    ttu:
+      name: Time-to-unlock
+      default: 120
+      selector:
+        number:
+          min: 0
+          max: 300
+          step: 1
+          unit_of_measurement: 'seconds'
+          mode: slider
 
-mode: restart
+mode: single
 
 trigger:
   - platform: state
     entity_id: !input lock
     to: 'locked'
     for:
-      seconds: 2
+      seconds: !input ttu
   - platform: state
     entity_id: !input door
     to: 'off'
@@ -50,7 +61,7 @@ trigger:
 
 action:
   - choose:
-    - alias: 'Unlock when door locked and open to prevent getting stuck'
+    - alias: 'Unlock when door locked and open to prevent getting stuck after ttu'
       conditions:
         - condition: state
           entity_id: !input door
