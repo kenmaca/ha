@@ -35,6 +35,8 @@ trigger:
   - platform: state
     entity_id: !input lock
     to: 'locked'
+    for:
+      seconds: 1
   - platform: state
     entity_id: !input door
     to: 'off'
