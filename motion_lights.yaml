@@ -35,7 +35,7 @@ trigger:
 action:
   - alias: "Turn on the light"
     service: homeassistant.turn_on
-    target: !input light_target
+    entity_id: !input light_target
   - alias: "Wait until there is no motion from device"
     wait_for_trigger:
       platform: state
@@ -46,4 +46,4 @@ action:
     delay: !input no_motion_wait
   - alias: "Turn off the light"
     service: homeassistant.turn_off
-    target: !input light_target
+    entity_id: !input light_target
