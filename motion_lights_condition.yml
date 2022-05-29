@@ -11,6 +11,10 @@ blueprint:
       name: Light
       selector:
         entity:
+    condition_entity:
+      name: Binary Sensor
+      selector:
+        entity:
     no_motion_wait:
       name: Wait time
       description: Time to leave the light on after last motion is detected
@@ -20,11 +24,6 @@ blueprint:
           min: 0
           max: 3600
           unit_of_measurement: seconds
-          
-    condition_entity:
-      name: Binary Sensor
-      selector:
-        entity:
 
 # If motion is detected within the delay,
 # we restart the script.
@@ -38,9 +37,9 @@ trigger:
   to: on
   
 condition:
-  condition: state
-  entity_id: !input condition_entity
-  state: on
+  - condition: state
+    entity_id: !input condition_entity
+    state: on
 
 action:
   - service: homeassistant.turn_on
