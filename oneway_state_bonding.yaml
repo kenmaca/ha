@@ -28,7 +28,7 @@ trigger:
     to: 'off'
 
 action:
-  - service: 'homeassistant.turn_{{ trigger.to_state.state }}'
+  - service_template: 'homeassistant.turn_{{ trigger.to_state.state }}'
     data_template:
       entity_id:
         - !input primary_switch
