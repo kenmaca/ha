@@ -23,6 +23,10 @@ mode: single
 trigger:
   - platform: state
     entity_id: !input primary_switch
+    to: 'off'
+  - platform: state
+    entity_id: !input primary_switch
+    to: 'on'
   - platform: state
     entity_id: !input secondary_switch
     to: 'off'
