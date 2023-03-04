@@ -1,0 +1,42 @@
+#
+# Casts a Lovelace Dashboard when presence has been detected in the room
+
+blueprint:
+  name: Casts a Lovelace Dashboard when presence has been detected in the room
+  domain: automation
+  input:
+    motion_sensor:
+      name: Motion Sensor
+      selector:
+        entity:
+          
+    cast_target:
+      name: Cast Target
+      selector:
+        entity:
+          integration: cast
+
+    dashboard_screen:
+      name: Lovelace View
+      default: '0'
+
+mode: single
+
+trigger:
+  - platform: state
+    entity_id: !input motion_sensor
+    from: "off"
+    to: "on"
+
+condition:
+  - condition: not
+    conditions:
+      - condition: state
+        entity_id: !input cast_target
+        state: "playing"
+
+action:
+  - service: cast.show_lovelace_view
+    data:
+      entity_id: !input cast_target
+      view_path: "0"
