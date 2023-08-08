@@ -17,6 +17,7 @@ blueprint:
       selector:
         entity:
           domain: media_player
+          domain: binary_sensor
 
     dimmed_brightness:
       name: Dimmed Brightness
