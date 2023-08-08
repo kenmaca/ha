@@ -71,7 +71,12 @@ variables:
 trigger:
   - platform: state
     entity_id: !input media_player
-    to: playing
+    to: 'playing'
+    for:
+      seconds: !input ttd
+  - platform: state
+    entity_id: !input media_player
+    to: 'on'
     for:
       seconds: !input ttd
 
