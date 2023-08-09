@@ -11,13 +11,14 @@ blueprint:
       selector:
         entity:
           domain: light
-          
+
     media_player:
       name: Media Player
       selector:
         entity:
-          domain: media_player
-          domain: binary_sensor
+          domain:
+            - media_player
+            - binary_sensor
 
     dimmed_brightness:
       name: Dimmed Brightness
@@ -27,7 +28,7 @@ blueprint:
           min: 0
           max: 100
           step: 5
-          unit_of_measurement: '%'
+          unit_of_measurement: "%"
           mode: slider
 
     ttd:
@@ -38,7 +39,7 @@ blueprint:
           min: 0
           max: 30
           step: 1
-          unit_of_measurement: 'seconds'
+          unit_of_measurement: "seconds"
           mode: slider
 
     ttr:
@@ -49,7 +50,7 @@ blueprint:
           min: 0
           max: 30
           step: 1
-          unit_of_measurement: 'seconds'
+          unit_of_measurement: "seconds"
           mode: slider
 
     dim_duration:
@@ -60,7 +61,7 @@ blueprint:
           min: 0
           max: 30
           step: 1
-          unit_of_measurement: 'seconds'
+          unit_of_measurement: "seconds"
           mode: slider
 
 mode: single
@@ -71,12 +72,12 @@ variables:
 trigger:
   - platform: state
     entity_id: !input media_player
-    to: 'playing'
+    to: "playing"
     for:
       seconds: !input ttd
   - platform: state
     entity_id: !input media_player
-    to: 'on'
+    to: "on"
     for:
       seconds: !input ttd
 
@@ -105,27 +106,27 @@ action:
   - delay:
       seconds: !input dim_duration
   - wait_for_trigger:
-    - platform: state
-      entity_id: !input media_player
-      to: 'paused'
-    - platform: state
-      entity_id: !input media_player
-      to: 'idle'
-      for:
-        seconds: !input ttr
-    - platform: state
-      entity_id: !input media_player
-      to: 'off'
-      for:
-        seconds: !input ttr
-    - platform: state
-      entity_id: !input media_player
-      to: 'unavailable'
-      for:
-        seconds: !input ttr
-    - platform: state
-      entity_id: !input room_light
-      to: 'off'
+      - platform: state
+        entity_id: !input media_player
+        to: "paused"
+      - platform: state
+        entity_id: !input media_player
+        to: "idle"
+        for:
+          seconds: !input ttr
+      - platform: state
+        entity_id: !input media_player
+        to: "off"
+        for:
+          seconds: !input ttr
+      - platform: state
+        entity_id: !input media_player
+        to: "unavailable"
+        for:
+          seconds: !input ttr
+      - platform: state
+        entity_id: !input room_light
+        to: "off"
   - service: scene.turn_on
     data_template:
       entity_id: scene.persistence_{{ room_light.split('.')[1] }}
