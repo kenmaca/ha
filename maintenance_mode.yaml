@@ -62,7 +62,7 @@ action:
   - service: scene.create
     data:
       scene_id: !input snapshot_scene
-      snapshot_entities: !input lights
+      snapshot_entities: "{{ lights.entity_id }}"
   # While cleaning is active, reassert that the lights are on (if the additional condition is met).
   - repeat:
       while:
