@@ -1,5 +1,5 @@
 blueprint:
-  name: "Maintenance Mode (forced light state)"
+  name: "Ensure Lights On During Vacuum Cleaning and Restore Previous State (Unique Scene)"
   description: >
     This blueprint captures the current state of selected lights before cleaning begins,
     continuously keeps them on during cleaning (if an optional additional condition is met),
@@ -53,11 +53,14 @@ action:
   # Compute a unique scene id based on the cleaning sensor and lights.
   - variables:
       restore_scene_id: >
-        {{ "scene.robot_cleaning_restore_" ~ cleaning_sensor.split('.')[1] ~ "_" ~ (lights | join('_') | replace(".", "_") | lower) }}
+        {{ "scene.robot_cleaning_restore_" ~
+           (cleaning_sensor.split('.')[1] if '.' in cleaning_sensor else cleaning_sensor) ~
+           "_" ~
+           (lights | join('_') | replace(".", "_") | lower) }}
   # Capture the current state of the lights before cleaning starts.
   - service: scene.create
     data:
-      scene_id: !var restore_scene_id
+      scene_id: "{{ restore_scene_id }}"
       snapshot_entities: !input lights
   # Continuously ensure the lights are on while cleaning is active.
   - repeat:
@@ -79,6 +82,6 @@ action:
   # Once cleaning stops, restore the previous state of the lights.
   - service: scene.turn_on
     data:
-      scene: !var restore_scene_id
+      scene: "{{ restore_scene_id }}"
 
 mode: single
