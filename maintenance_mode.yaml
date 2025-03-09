@@ -1,0 +1,84 @@
+blueprint:
+  name: "Maintenance Mode (forced light state)"
+  description: >
+    This blueprint captures the current state of selected lights before cleaning begins,
+    continuously keeps them on during cleaning (if an optional additional condition is met),
+    and then restores the previous state when cleaning stops.
+    The snapshot scene is uniquely named based on the cleaning sensor and lights to avoid collisions
+    when using multiple instances of this automation.
+  domain: automation
+  input:
+    cleaning_sensor:
+      name: Vacuum Cleaning Sensor
+      description: "Select the binary sensor that indicates your vacuum is cleaning."
+      selector:
+        entity:
+          domain: binary_sensor
+    lights:
+      name: Lights to Manage
+      description: "Select one or more lights to manage during cleaning."
+      selector:
+        target:
+          entity:
+            domain: light
+    check_interval:
+      name: Check Interval
+      description: "Interval in seconds between checks to reassert that the lights are on."
+      default: 5
+      selector:
+        number:
+          min: 1
+          max: 60
+          unit_of_measurement: seconds
+    additional_condition:
+      name: Additional Condition
+      description: >
+        Optional template condition that must evaluate to true for the lights to be kept on.
+        For example:
+        ```
+        is_state('binary_sensor.door', 'off') and is_state('sun.sun', 'below_horizon')
+        ```
+        Defaults to `true` if not specified.
+      default: "true"
+      selector:
+        text:
+          multiline: true
+
+trigger:
+  - platform: state
+    entity_id: !input cleaning_sensor
+    to: "on"
+
+action:
+  # Compute a unique scene id based on the cleaning sensor and lights.
+  - variables:
+      restore_scene_id: >
+        {{ "scene.robot_cleaning_restore_" ~ cleaning_sensor.split('.')[1] ~ "_" ~ (lights | join('_') | replace(".", "_") | lower) }}
+  # Capture the current state of the lights before cleaning starts.
+  - service: scene.create
+    data:
+      scene_id: !var restore_scene_id
+      snapshot_entities: !input lights
+  # Continuously ensure the lights are on while cleaning is active.
+  - repeat:
+      while:
+        - condition: state
+          entity_id: !input cleaning_sensor
+          state: "on"
+      sequence:
+        - choose:
+            - conditions:
+                - condition: template
+                  value_template: "{{ additional_condition }}"
+              sequence:
+                - service: light.turn_on
+                  target: !input lights
+          default: []
+        - delay:
+            seconds: !input check_interval
+  # Once cleaning stops, restore the previous state of the lights.
+  - service: scene.turn_on
+    data:
+      scene: !var restore_scene_id
+
+mode: single
