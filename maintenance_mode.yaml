@@ -62,7 +62,7 @@ action:
   - service: scene.create
     data:
       scene_id: !input snapshot_scene
-      snapshot_entities: "{{ lights.entity_id }}"
+      snapshot_entities: '{{ lights.entity_id }}'
   # While cleaning is active, reassert that the lights remain on if the additional condition is met.
   - repeat:
       while:
@@ -73,7 +73,7 @@ action:
         - choose:
             - conditions:
                 - condition: template
-                  value_template: "{{ additional_condition }}"
+                  value_template: '{{ additional_condition }}'
               sequence:
                 - service: light.turn_on
                   target: !input lights
@@ -83,6 +83,6 @@ action:
   # When cleaning stops, restore the lights' previous state.
   - service: scene.turn_on
     data:
-      scene: "scene.{{ snapshot_scene }}"
+      scene: 'scene.{{ snapshot_scene }}'
 
 mode: single
