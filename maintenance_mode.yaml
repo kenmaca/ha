@@ -2,10 +2,10 @@ blueprint:
   name: "Maintenance Mode (forced light state)"
   description: >
     This blueprint captures the current state of selected lights before cleaning begins,
-    continuously keeps them on during cleaning (if an optional additional condition is met),
+    continuously forces them on during cleaning (if an optional additional condition is met),
     and then restores the previous state when cleaning stops.
-    The snapshot scene is uniquely named based on the cleaning sensor and lights to avoid collisions
-    when using multiple instances of this automation.
+    Instead of computing a unique scene id automatically, you provide a scene slug (without the "scene." prefix)
+    to be used for the snapshot. Ensure this scene id is unique per automation instance.
   domain: automation
   input:
     cleaning_sensor:
@@ -43,6 +43,14 @@ blueprint:
       selector:
         text:
           multiline: true
+    snapshot_scene:
+      name: Snapshot Scene (slug)
+      description: >
+        Provide a unique scene slug (without the "scene." prefix) that will be used to capture the
+        current state of the lights before cleaning begins. This scene is later activated to restore the state.
+      default: "robot_cleaning_restore"
+      selector:
+        text:
 
 trigger:
   - platform: state
@@ -50,19 +58,12 @@ trigger:
     to: "on"
 
 action:
-  # Compute a unique scene id based on the cleaning sensor and lights.
-  - variables:
-      restore_scene_id: >
-        {{ "scene.robot_cleaning_restore_" ~
-           (cleaning_sensor.split('.')[1] if '.' in cleaning_sensor else cleaning_sensor) ~
-           "_" ~
-           (lights | join('_') | replace(".", "_") | lower) }}
   # Capture the current state of the lights before cleaning starts.
   - service: scene.create
     data:
-      scene_id: "{{ restore_scene_id }}"
+      scene_id: !input snapshot_scene
       snapshot_entities: !input lights
-  # Continuously ensure the lights are on while cleaning is active.
+  # While cleaning is active, reassert that the lights are on (if the additional condition is met).
   - repeat:
       while:
         - condition: state
@@ -79,9 +80,9 @@ action:
           default: []
         - delay:
             seconds: !input check_interval
-  # Once cleaning stops, restore the previous state of the lights.
+  # When cleaning stops, restore the lights' previous state.
   - service: scene.turn_on
     data:
-      scene: "{{ restore_scene_id }}"
+      scene: "scene.{{ snapshot_scene }}"
 
 mode: single
