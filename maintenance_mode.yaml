@@ -51,10 +51,15 @@ blueprint:
       default: "robot_cleaning_restore"
       selector:
         text:
+variables:
+  lights: !input lights
+  cleaning_sensor: !input cleaning_sensor
+  additional_condition: !input additional_condition
+  snapshot_scene: !input snapshot_scene
 
 trigger:
   - platform: state
-    entity_id: !input cleaning_sensor
+    entity_id: "{{ cleaning_sensor }}"
     to: "on"
 
 action:
@@ -62,12 +67,12 @@ action:
   - service: scene.create
     data:
       scene_id: "{{ snapshot_scene }}"
-      snapshot_entities: '{{ lights.entity_id }}'
+      snapshot_entities: "{{ lights.entity_id }}"
   # While cleaning is active, reassert that the lights remain on if the additional condition is met.
   - repeat:
       while:
         - condition: state
-          entity_id: !input cleaning_sensor
+          entity_id: "{{ cleaning_sensor }}" 
           state: "on"
       sequence:
         - choose:
@@ -76,7 +81,7 @@ action:
                   value_template: "{{ additional_condition }}"
               sequence:
                 - service: light.turn_on
-                  target: !input lights
+                  target: "{{ lights.entity_id }}"
           default: []
         - delay:
             seconds: !input check_interval
