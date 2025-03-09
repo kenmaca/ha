@@ -1,5 +1,5 @@
 blueprint:
-  name: "Ensure Lights On During Vacuum Cleaning and Restore Previous State (Unique Scene)"
+  name: "Maintenance Mode (forced light state)"
   description: >
     This blueprint captures the current state of selected lights before cleaning begins,
     continuously keeps them on during cleaning (if an optional additional condition is met),
