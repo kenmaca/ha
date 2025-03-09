@@ -58,14 +58,11 @@ trigger:
     to: "on"
 
 action:
-  # Extract the list of light entity IDs from the input.
-  - variables:
-      light_ids: "{{ input.lights.entity_id }}"
   # Create a snapshot scene of the selected lights.
   - service: scene.create
     data:
-      scene_id: "{{ input.snapshot_scene }}"
-      snapshot_entities: "{{ light_ids }}"
+      scene_id: "{{ snapshot_scene }}"
+      snapshot_entities: '{{ lights.entity_id }}'
   # While cleaning is active, reassert that the lights remain on if the additional condition is met.
   - repeat:
       while:
@@ -76,7 +73,7 @@ action:
         - choose:
             - conditions:
                 - condition: template
-                  value_template: "{{ input.additional_condition }}"
+                  value_template: "{{ additional_condition }}"
               sequence:
                 - service: light.turn_on
                   target: !input lights
@@ -86,6 +83,6 @@ action:
   # When cleaning stops, restore the lights' previous state.
   - service: scene.turn_on
     data:
-      scene: "scene.{{ input.snapshot_scene }}"
+      scene: "scene.{{ snapshot_scene }}"
 
 mode: single
